@@ -34,7 +34,7 @@ int Comm[1001];
 int Mtime[1001];
 
 int a, b;
-int Energy=0;
+int Energy = 0;
 int length = 0;
 
 
@@ -66,7 +66,7 @@ int main()
 	cin >> N >> M;
 
 	// Map 저장
-	for (int y = N-1; y >=0; y--)
+	for (int y = N - 1; y >= 0; y--)
 	{
 		for (int x = 0; x < N; x++)
 		{
@@ -75,7 +75,7 @@ int main()
 			{
 				b = y;
 				a = x;
-	
+
 
 			}
 		}
@@ -131,7 +131,7 @@ void Move(int t)
 
 	for (int i = 0; i < t; i++)
 	{
-		
+
 
 		if (curdir == 0) b--;
 		else if (curdir == 1) a--;
@@ -143,19 +143,35 @@ void Move(int t)
 		if (Map1[b][a] == 9) // 벽
 		{
 			gameover = true;
-			return ;
+			return;
 		}
-		else if (Map1[b][a] == -9 ) 
+		else
 		{
 			if (Energy > 0)
 			{
-				gameover = true;
-				return;
+				if (Map1[b][a] == -9)
+				{
+					gameover = true;
+					return;
+				}
+				else if (Map1[b][a] == 3)
+				{
+					Energy += 3;
+				}
+				coord co = Tail.back();
+				Map1[co.y][co.x] = -9;
+				// 꼬리 증가
+				co.x = a;
+				co.y = b;
+				Tail.push(co);
+				Energy--;
+				length++;
+
 			}
-			else
+			else if (Energy <= 0)
 			{
-		
-			    // A()
+
+				// A()
 				if (length != 0) length--;
 				int t = 1;
 
@@ -187,43 +203,6 @@ void Move(int t)
 					co.y = b;
 					Tail.push(co);
 				}
-
-			}
-		}
-
-		else
-		{
-			// A()
-			if (Energy <= 0)
-			{
-				if (length != 0) length--;
-
-			
-				int t = 1;
-				// 꼬리 자르기, 수정필요. length까지 for looping 돌려서 꼬리 재정비
-				while (Tail.size() != length)
-				{
-					
-					coord co = Tail.front();
-					Map1[co.y][co.x] = 0;
-					Tail.pop();
-
-					if (t == 1 && length!=0)
-					{
-						coord co = Tail.back();
-						Map1[co.y][co.x] = -9;
-						t--;
-					}
-				}
-
-
-				if (length != 0)
-				{
-					coord co;
-					co.x = a;
-					co.y = b;
-					Tail.push(co);
-				}
 				if (Map1[b][a] == 3)
 				{
 					Energy += 3;
@@ -233,31 +212,16 @@ void Move(int t)
 					Tail.push(co);
 				}
 
-
-			}
-			else
-			{
-				if (Map1[b][a] == 3)
-				{
-					Energy += 3;
-				}
-				coord co = Tail.back();
-				Map1[co.y][co.x] = -9;
-				// 꼬리 증가
-				co.x = a;
-				co.y = b;
-				Tail.push(co);
-				Energy--;
-				length++;
-				
 			}
 		}
-		
+
+
+
 		Map1[b][a] = 1;
-		if (curdir == 0 && Map1[b + 1][a]==1) Map1[b + 1][a] = 0;
-		else if (curdir == 1 && Map1[b][a + 1]==1) Map1[b][a+1] = 0;
-		else if (curdir == 2 && Map1[b][a - 1]==1) Map1[b][a-1] = 0;
-		else if (curdir == 3 && Map1[b - 1][a]==1) Map1[b - 1][a] = 0;
+		if (curdir == 0 && Map1[b + 1][a] == 1) Map1[b + 1][a] = 0;
+		else if (curdir == 1 && Map1[b][a + 1] == 1) Map1[b][a + 1] = 0;
+		else if (curdir == 2 && Map1[b][a - 1] == 1) Map1[b][a - 1] = 0;
+		else if (curdir == 3 && Map1[b - 1][a] == 1) Map1[b - 1][a] = 0;
 
 
 	}
